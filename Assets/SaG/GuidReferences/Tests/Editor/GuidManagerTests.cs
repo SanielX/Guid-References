@@ -79,7 +79,7 @@ namespace SaG.GuidReferences.Tests.Editor
             var guid = Guid.NewGuid();
             var gameObject = new GameObject("GuidManagerTests GO");
             int addedCallbackRaiseCount = 0;
-            GameObject addedCallbackResolveObject = null;
+            UnityEngine.Object addedCallbackResolveObject = null;
             guidManager.ResolveGuid(guid, o =>
                 {
                     addedCallbackResolveObject = o;

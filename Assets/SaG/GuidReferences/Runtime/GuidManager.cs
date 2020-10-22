@@ -14,12 +14,12 @@ namespace SaG.GuidReferences
         // and an event to store all the callbacks that need to know when it is destroyed
         private struct GuidInfo
         {
-            public GameObject gameObject;
+            public UnityEngine.Object gameObject;
 
-            public event Action<GameObject> Added;
+            public event Action<UnityEngine.Object> Added;
             public event Action Removed;
 
-            public GuidInfo(GameObject gameObject)
+            public GuidInfo(UnityEngine.Object gameObject)
             {
                 this.gameObject = gameObject;
                 Removed = null;
@@ -42,7 +42,7 @@ namespace SaG.GuidReferences
             guidToObjectMap = new Dictionary<Guid, GuidInfo>();
         }
 
-        public bool Add(Guid guid, GameObject gameObject)
+        public bool Add(Guid guid, UnityEngine.Object gameObject)
         {
             if (guid == Guid.Empty)
                 throw new ArgumentNullException(nameof(guid), "There was an attempt to add empty Guid.");
@@ -97,7 +97,7 @@ namespace SaG.GuidReferences
         // nice easy api to find a GUID, and if it works, register an on destroy callback
         // this should be used to register functions to cleanup any data you cache on finding
         // your target. Otherwise, you might keep components in memory by referencing them
-        public GameObject ResolveGuid(Guid guid, Action<GameObject> onAddCallback, Action onRemoveCallback)
+        public UnityEngine.Object ResolveGuid(Guid guid, Action<UnityEngine.Object> onAddCallback, Action onRemoveCallback)
         {
             GuidInfo info;
             if (guidToObjectMap.TryGetValue(guid, out info))

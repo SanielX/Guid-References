@@ -13,7 +13,7 @@ namespace SaG.GuidReferences
         public static IGuidManager Instance => _instance ?? (_instance = new GuidManager());
         
         // All the public API is static so you need not worry about creating an instance
-        public static bool Add(Guid guid, GameObject gameObject)
+        public static bool Add(Guid guid, UnityEngine.Object gameObject)
         {
             return Instance.Add(guid, gameObject);
         }
@@ -23,17 +23,17 @@ namespace SaG.GuidReferences
             return Instance.Remove(guid);
         }
         
-        public static GameObject ResolveGuid(Guid guid, Action<GameObject> onAddCallback, Action onRemoveCallback)
+        public static UnityEngine.Object ResolveGuid(Guid guid, Action<UnityEngine.Object> onAddCallback, Action onRemoveCallback)
         {
             return Instance.ResolveGuid(guid, onAddCallback, onRemoveCallback);
         }
 
-        public static GameObject ResolveGuid(Guid guid, Action onRemoveCallback)
+        public static UnityEngine.Object ResolveGuid(Guid guid, System.Action onRemoveCallback)
         {
             return Instance.ResolveGuid(guid, null, onRemoveCallback);
         }
 
-        public static GameObject ResolveGuid(Guid guid)
+        public static UnityEngine.Object ResolveGuid(Guid guid)
         {
             return Instance.ResolveGuid(guid, null, null);
         }

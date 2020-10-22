@@ -5,10 +5,10 @@ namespace SaG.GuidReferences
 {
     public interface IGuidManager
     {
-        bool Add(Guid guid, GameObject gameObject);
+        bool Add(Guid guid, UnityEngine.Object gameObject);
 
         bool Remove(Guid guid);
 
-        GameObject ResolveGuid(Guid guid, Action<GameObject> onAddCallback, Action onRemoveCallback);
+        UnityEngine.Object ResolveGuid(Guid guid, Action<UnityEngine.Object> onAddCallback, Action onRemoveCallback);
     }
 }

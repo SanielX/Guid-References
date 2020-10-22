@@ -25,7 +25,7 @@ namespace SaG.GuidReferences.Tests.Editor
         {
             guidManagerMock.ResolveGuidResult = null;
             GuidReference reference = new GuidReference();
-            Assert.IsNull(reference.gameObject);
+            Assert.IsNull(reference.reference);
         }
         
         [Test]
@@ -36,7 +36,7 @@ namespace SaG.GuidReferences.Tests.Editor
             // todo
             Object.DestroyImmediate(newGuid);
 
-            Assert.IsNull(reference.gameObject);
+            Assert.IsNull(reference.reference);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SaG.GuidReferences.Tests.Editor
             GuidComponent newGuid = GuidComponentTests.CreateNewGuid();
             GuidReference reference = new GuidReference(newGuid.GetGuid());
             guidManagerMock.ResolveGuidResult = newGuid.gameObject;
-            Assert.AreEqual(newGuid.gameObject, reference.gameObject);
+            Assert.AreEqual(newGuid.gameObject, reference.reference);
         }
         
         [Test]
@@ -54,7 +54,7 @@ namespace SaG.GuidReferences.Tests.Editor
             var guidComponent = GuidComponentTests.CreateNewGuid();
             GuidReference reference = new GuidReference(guidComponent.GetGuid());
             int addedEventRaiseCount = 0;
-            GameObject addedEventResult = null;
+            UnityEngine.Object addedEventResult = null;
             reference.Added += gameObject =>
             {
                 addedEventRaiseCount++;

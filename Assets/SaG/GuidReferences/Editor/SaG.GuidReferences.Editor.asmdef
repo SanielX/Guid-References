@@ -1,7 +1,8 @@
 {
     "name": "SaG.GuidReferences.Editor",
     "references": [
-        "GUID:e921ad2c6c58735448980a63475c7203"
+        "GUID:e921ad2c6c58735448980a63475c7203",
+        "GUID:679c13f0dc0fa5e449b36601e7ad04b8"
     ],
     "includePlatforms": [
         "Editor"

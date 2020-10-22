@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -19,6 +21,9 @@ namespace SaG.GuidReferences
         Guid guid = Guid.Empty;
         private string cachedStringGuid;
 
+        [SerializeField]
+        public BehaviourToGuidDictionary dic;
+
         // Unity's serialization system doesn't know about System.Guid, so we convert to a byte array
         // Fun fact, we tried using strings at first, but that allocated memory and was twice as slow
         [SerializeField]
@@ -29,7 +34,6 @@ namespace SaG.GuidReferences
         {
             return guid != Guid.Empty;
         }
-
 
         // When de-serializing or creating this component, we want to either restore our serialized GUID
         // or create a new one.
@@ -64,6 +68,8 @@ namespace SaG.GuidReferences
                 guid = new Guid(serializedGuid);
             }
 
+            var allComps = GetComponents<Behaviour>();
+
             // register with the GUID Manager so that other components can access this
             if (guid != Guid.Empty)
             {
@@ -72,7 +78,41 @@ namespace SaG.GuidReferences
                     // if registration fails, we probably have a duplicate or invalid GUID, get us a new one.
                     RegenerateGuid();
                 }
+
+                var keys = dic.Keys.ToArray();
+                var vals = dic.Values.ToArray();
+                for (int i = 0; i < dic.Count; i++)
+                {
+                    GuidManagerSingleton.Add(keys[i].Guid, vals[i]);
+                }
             }
+        }
+
+        [ContextMenu("Update")]
+        public void UpdateDic()
+        {
+            List<Component> components = GetComponents<Component>().ToList();
+            List<Component> comps = dic.Values.ToList();
+            List<SerializableGuid> keys = dic.Keys.ToList();
+
+            for (int i = 0; i < keys.Count; i++)
+            {
+                if (comps[i] == null)
+                {
+                    dic.Remove(keys[i]);
+                    comps.Remove(comps[i]);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (!comps.Contains(components[i]))
+                {
+                    dic.Add(new SerializableGuid(Guid.NewGuid()), components[i]);
+                }
+            }
+
         }
 
 #if UNITY_EDITOR
@@ -124,6 +164,21 @@ namespace SaG.GuidReferences
                 {
                     serializedGuid = guid.ToByteArray();
                 }
+
+          /*      dic.OnBeforeSerialize();
+                dic.OnAfterDeserialize();
+                dic.OnDeserialization(this);
+
+                List<Component> components = GetComponents<Component>().ToList();
+                List<Component> comps = dic.Values.ToList();
+
+                for (int i = 0; i < components.Count; i++)
+                {
+                    if (!comps.Contains(components[i]))
+                    {
+                        dic.Add(new SerializableGuid(Guid.NewGuid()), components[i]);
+                    }
+                }*/
             }
         }
 

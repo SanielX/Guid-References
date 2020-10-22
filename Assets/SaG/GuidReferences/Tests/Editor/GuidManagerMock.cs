@@ -12,19 +12,19 @@ namespace SaG.GuidReferences.Tests.Editor
         /// <summary>
         /// Gets gameObject that was provided in last Add() method call.
         /// </summary>
-        public GameObject AddGameObjectArgument { get; private set; } = null;
+        public UnityEngine.Object AddGameObjectArgument { get; private set; } = null;
         /// <summary>
         /// Gets guid that was provided in last Remove() method call.
         /// </summary>
         public Guid RemoveGuidArgument { get; private set; } = Guid.Empty;
         public bool AddResult { get; set; } = true;
         public bool RemoveResult { get; set; } = true;
-        public GameObject ResolveGuidResult { get; set; } = null;
+        public UnityEngine.Object ResolveGuidResult { get; set; } = null;
 
-        private Action<GameObject> onAddCallback;
+        private Action<UnityEngine.Object> onAddCallback;
         private Action onRemoveCallback;
         
-        public void InvokeAddCallback(GameObject gameObject)
+        public void InvokeAddCallback(UnityEngine.Object gameObject)
         {
             onAddCallback?.Invoke(gameObject);
         }
@@ -34,7 +34,7 @@ namespace SaG.GuidReferences.Tests.Editor
             onRemoveCallback?.Invoke();
         }
         
-        public bool Add(Guid guid, GameObject gameObject)
+        public bool Add(Guid guid, UnityEngine.Object gameObject)
         {
             AddGuidArgument = guid;
             AddGameObjectArgument = gameObject;
@@ -47,7 +47,7 @@ namespace SaG.GuidReferences.Tests.Editor
             return RemoveResult;
         }
 
-        public GameObject ResolveGuid(Guid guid, Action<GameObject> onAddCallback, Action onRemoveCallback)
+        public UnityEngine.Object ResolveGuid(Guid guid, Action<UnityEngine.Object> onAddCallback, Action onRemoveCallback)
         {
             this.onAddCallback = onAddCallback;
             this.onRemoveCallback = onRemoveCallback;

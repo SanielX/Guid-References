@@ -8,6 +8,19 @@ using UnityEditor;
 
 namespace SaG.GuidReferences
 {
+    public sealed class GuidReferenceTypeAttribute : PropertyAttribute
+    {
+        public Type type;
+
+        public GuidReferenceTypeAttribute(Type t)
+        {
+            type = t;
+        }
+    }
+
+    [System.Serializable]
+    public class BehaviourToGuidDictionary : SerializableDictionary<SerializableGuid, Component> { }
+
     /// <summary>
     /// Provides reference to an GameObject by Guid.
     /// </summary>
@@ -16,7 +29,8 @@ namespace SaG.GuidReferences
     public sealed class GuidReference : ISerializationCallbackReceiver
     {
         // cache the referenced Game Object if we find one for performance
-        private GameObject cachedReference;
+        [SerializeField]
+        private UnityEngine.Object cachedReference;
 
         // Indicates that cachedReference is set
         private bool isCacheSet;
@@ -30,7 +44,8 @@ namespace SaG.GuidReferences
 
         // create concrete delegates to avoid boxing. 
         // When called 10,000 times, boxing would allocate ~1MB of GC Memory
-        private Action<GameObject> addDelegate;
+        // Not true anymore
+        private Action<UnityEngine.Object> addDelegate;
         private Action removeDelegate;
         
 #if UNITY_EDITOR
@@ -58,7 +73,7 @@ namespace SaG.GuidReferences
         /// <summary>
         /// Occurs when reference is set. Use this event to get reference.
         /// </summary>
-        public event Action<GameObject> Added = delegate(GameObject go) { };
+        public event Action<UnityEngine.Object> Added = delegate(UnityEngine.Object go) { };
         
         /// <summary>
         /// Occurs when reference is removed. In most cases this means that GameObject has been destroyed. 
@@ -66,10 +81,10 @@ namespace SaG.GuidReferences
         public event Action Removed = delegate() { };
 
         /// <summary>
-        /// Returns target GameObject if it is loaded, otherwise, makes request to resolve reference and returns NULL. 
+        /// Returns target Object if it is loaded, otherwise, makes request to resolve reference and returns NULL. 
         /// Optimized accessor, and ideally the only code you ever call on this class.
         /// </summary>
-        public GameObject gameObject
+        public UnityEngine.Object reference
         {
             get
             {
@@ -77,7 +92,7 @@ namespace SaG.GuidReferences
                 if (isCacheSet)
                     return cachedReference;
 
-                GameObject reference = null;
+                UnityEngine.Object reference = null;
                 // if never asked for reference then ask for it
                 if (!isRequestSent)
                 {
@@ -100,7 +115,7 @@ namespace SaG.GuidReferences
             GuidManagerSingleton.ResolveGuid(guid, addDelegate, removeDelegate);
         }
 
-        private void OnGuidAdded(GameObject go)
+        private void OnGuidAdded(UnityEngine.Object go)
         {
             isCacheSet = true;
             cachedReference = go;
@@ -124,7 +139,7 @@ namespace SaG.GuidReferences
         // convert from byte array to system guid and reset state
         public void OnAfterDeserialize()
         {
-            cachedReference = null;
+            //cachedReference = null;
             isCacheSet = false;
             if (serializedGuid == null || serializedGuid.Length != 16)
             {

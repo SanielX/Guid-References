@@ -1,4 +1,7 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace SaG.GuidReferences.Editor
 {
@@ -16,6 +19,24 @@ namespace SaG.GuidReferences.Editor
        
             // Draw label
             EditorGUILayout.LabelField("Guid:", guidComp.GetGuid().ToString());
+
+     //       Dictionary<Behaviour, SerializableGuid> dic = guidComp.dic as Dictionary<Behaviour, SerializableGuid>;
+            var keys = guidComp.dic.Keys.ToArray();
+            var vals = guidComp.dic.Values.ToArray();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Guid:", keys[i].Guid.ToString());
+#pragma warning disable CS0618 
+                EditorGUILayout.ObjectField(vals[i], typeof(UnityEngine.Object));
+#pragma warning restore CS0618 
+            }
+
+            EditorGUILayout.Space();
+            if(GUILayout.Button("Update components"))
+            {
+                guidComp.UpdateDic();
+            }
         }
     }
 }

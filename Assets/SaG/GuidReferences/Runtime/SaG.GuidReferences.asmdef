@@ -1,6 +1,8 @@
 {
     "name": "SaG.GuidReferences",
-    "references": [],
+    "references": [
+        "GUID:679c13f0dc0fa5e449b36601e7ad04b8"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
